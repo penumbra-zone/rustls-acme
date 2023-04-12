@@ -44,10 +44,11 @@ impl<
     > Incoming<TCP, ETCP, ITCP, EC, EA>
 {
     pub fn new(tcp_incoming: ITCP, state: AcmeState<EC, EA>, acceptor: AcmeAcceptor) -> Self {
-        let config = ServerConfig::builder()
+        let mut config = ServerConfig::builder()
             .with_safe_defaults()
             .with_no_client_auth()
             .with_cert_resolver(state.resolver());
+        config.alpn_protocols.push("h2".into());
         Self {
             state,
             acceptor,
